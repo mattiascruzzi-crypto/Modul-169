@@ -1,0 +1,12 @@
+{
+  "name": "modul-169-excercises",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "prettier": "^2.7.1"
+  },
+  "prettier": {
+    "proseWrap": "always",
+    "embeddedLanguageFormatting": "auto"
+  }
+}

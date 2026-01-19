@@ -1,0 +1,7 @@
+node_modules
+docker_commands.md
+README.md
+docker-compose.yml
+Dockerfile
+.env
+env-struct

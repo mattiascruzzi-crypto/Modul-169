@@ -1,0 +1,7 @@
+.git
+.dockerignore
+.gitignore
+Dockerfile
+test.http
+solution
+compose.yaml

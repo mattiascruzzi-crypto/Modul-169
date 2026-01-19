@@ -1,0 +1,7 @@
+# Build the image
+
+docker build -t pyapi:1.0  .     
+
+# Run the image
+
+docker run -d -p 8000:8000 pyapi:1.0

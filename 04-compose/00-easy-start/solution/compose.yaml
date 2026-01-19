@@ -1,0 +1,13 @@
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.api
+    ports:
+      - 3000:3000
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile.ui
+    ports:
+      - 8070:80
