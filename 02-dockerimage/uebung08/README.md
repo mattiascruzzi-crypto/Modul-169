@@ -1,71 +1,45 @@
-## Übung 8
+## Übung 7
 
 :::note
 
-- Zusätzliches Feature: ".dockerignore"
+- Zusätzlicher Befehl: `COPY`.
 
 :::
 
-Wir wollen nun ein Image erstellen, wo zu Laufzeit angegeben werden kann,
-welches Python-Skript laufen soll. Zudem wollen wir mit einem sogenannten
-_.dockerignore_ File definieren, was ignoriert werden soll, wenn wir ein ganzes
-Verzeichnis kopieren.
+Jetzt wollen wir ein einfaches Python-Programm laufen lassen. Wir benützen als
+Basis-Image python:3.13.1-alpine3.20. Dies bedeutet, dass wir die Python-Version
+3.13.1 und die alpine-Version 3.20 verwenden. Es ist gute Praxis, konkrete
+Versionen des Base-Images zu wählen, um Versions-Konflikte mit dem Programm,
+welches im Container läuft, zu verhindern.
 
-- Kopieren Sie den Ordner von _uebung07_ und nennen Sie in um in _uebung08_.
-- Erstellen Sie ein weiteres Python-Skript mit dem Namen `guess_the_number.py`
-  und kopieren Sie das unten stehende Skript hinein.
-  - Achten Sie wieder auf die Einrückungen.
+- Erstellen Sie ein Dockerfile mit der Basis `python:3.13.1-alpine3.20`
+- Definieren Sie als Arbeitsverzeichnis `/app`.
+- Erstellen Sie im Ordner dieser Übung die Datei `app.py` und kopieren Sie
+  folgenden Inhalt hinein.
+  - Achten Sie darauf, dass die Einrückungen gleich sind!
 
-```python title="guess_the_number.py"
-import random
+```python title="app.py"
+import os
 
-def guess_the_number():
-    number_to_guess = random.randint(1, 100)
-    attempts = 0
-    print("Welcome to 'Guess the Number'!")
-    print("I'm thinking of a number between 1 and 100.")
-    while True:
-        try:
-            guess = int(input("Take a guess: "))
-            attempts += 1
-            if guess < number_to_guess:
-                print("Too low! Try again.")
-            elif guess > number_to_guess:
-                print("Too high! Try again.")
-            else:
-                print(f"Congratulations! You've guessed the number {number_to_guess} in {attempts} attempts.")
-                break
-        except ValueError:
-            print("Please enter a valid integer.")
+def list_folders_in_root():
+    # Get the list of all entries in the root directory
+    entries = os.listdir('/')
+    # Filter out only directories
+    folders = [entry for entry in entries if os.path.isdir(os.path.join('/', entry))]
+    return folders
 
-if __name__ == "__main__":
-    guess_the_number()
+if **name** == "**main**":
+    folders = list_folders_in_root()
+    print("Folders in the root directory:")
+    for folder in folders:
+        print(folder)
 ```
 
-- Kopieren Sie im _Dockerfile_ den gesamten Ordnerinhalt in das
-  Arbeitsverzeichnis hinein. Dies erreichen Sie, indem Sie `COPY . .` ergänzen.
-  Den anderen COPY Befehl brauchen Sie nicht mehr.
-- Damit das _Dockerfile_ selber nicht in das Image kopiert wird, erstellen Sie
-  eine Datei mit dem Namen `.dockerignore` und ergänzen sie mit dem Eintrag
-  `Dockerfile` wie folgt.
-
-```txt title=".dockerignore"
-Dockerfile
-```
-
-- Ändern Sie den Rest vom _Dockerfile_ so ab, dass standardmässig `app.py`
-  ausgeführt wird. Man soll jedoch beim Starten des Containers auch
-  `guess_the_number.py` wählen können.
-- Bilden Sie das Image mit dem Tag `-t uebung08`
+- Kopieren Sie `app.py` mit dem `COPY` Befehl in das Arbeitsverzeichnis.
+- Sorgen Sie mit dem `CMD` Befehl dafür, dass die App ausgeführt wird.
+- Bilden Sie das Image mit dem Tag `-t uebung07`
 - Erstellen Sie einen Container vom eben erstellten Image mit dem Befehlt
-  `docker run uebung08`. Sie sollten die gleiche Ausgabe wie bei _uebung07_
-  erhalten.
-- Damit Sie das Spiel spielen können, müssen Sie den Container interaktiv
-  starten: `docker run -it --rm uebung08 guess_the_number.py`
-  - `-it` startet den Container im interaktiven Modus, das heisst, Sie befinden
-    sich nach dem Starten im Container.
-  - `--rm` führt dazu, dass der Container gelöscht wird, sobald Sie den
-    Container beenden.
-  - Mit dem Zusatz `guess_the_number.py` überschreiben Sie den Standartwert des
-    im _Dockerfile_ definierten `CMD` Befehl.
+  `docker run uebung07`.
+- Sie sollten eine Ausgabe aller Ordner im Root-Verzeichnis bekommen: _home,
+  bin, run…_
 
