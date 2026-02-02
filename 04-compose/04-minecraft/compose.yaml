@@ -1,13 +1,25 @@
 services:
- minecraft:
-   image: itzg/minecraft-server
-   ports:
-     - "25565:25565"
-   environment:
-     EULA: "TRUE"
-   deploy:
-     resources:
-       limits:
-         memory: 1.5G
-   volumes:
-     - "~/minecraft_data:/data"
+  minecraft:
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      VERSION: "1.21"  # WICHTIG: In Anführungszeichen setzen!
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+    dns: 
+      - "1.1.1.1"
+      - "8.8.8.8"
+    volumes:
+      - "./minecraft_data:/data"
+    networks:
+      - mc-net
+
+networks:
+  mc-net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: "1400" # Hilft bei restriktiven Firewalls
