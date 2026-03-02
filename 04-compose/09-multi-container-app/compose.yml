@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15.1-alpine
+    container_name: db
+    environment:
+      POSTGRES_PASSWORD: foobarbaz
+    networks:
+      - newnet
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  api-node:
+    build: ./api-node
+    container_name: api-node
+    environment:
+      DB_URL: postgres://postgres:foobarbaz@db:5432/postgres
+    depends_on:
+      - db
+    networks:
+      - newnet
+    ports:
+      - "3000:3000"
+
+  api-go:
+    build: ./api-go
+    container_name: api-go
+    environment:
+      DB_URL: postgres://postgres:foobarbaz@db:5432/postgres
+    depends_on:
+      - db
+    networks:
+      - newnet
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    environment:
+      REACT_APP_NODE_API: http://localhost:3000
+      REACT_APP_GO_API: http://localhost:8080
+    depends_on:
+      - api-node
+      - api-go
+    networks:
+      - newnet
+    ports:
+      - "80:80"
+
+networks:
+  newnet:
+    driver: bridge
+
+volumes:
+  db-data:
