@@ -26,7 +26,7 @@ services:
       - "3000:3000"
 
   api-go:
-    build: ./api-go
+    build: ./api-golang
     container_name: api-go
     environment:
       DB_URL: postgres://postgres:foobarbaz@db:5432/postgres
@@ -38,8 +38,7 @@ services:
       - "8080:8080"
 
   frontend:
-    build: ./frontend
-    container_name: frontend
+    build: ./client-react  # <--- HIER ÄNDERN    container_name: frontend
     environment:
       REACT_APP_NODE_API: http://localhost:3000
       REACT_APP_GO_API: http://localhost:8080
