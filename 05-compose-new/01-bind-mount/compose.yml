@@ -1,0 +1,12 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+
+    ports:
+      - "80:80" # It's also best practice to quote port mappings
+
+    volumes:
+      - ./html:/usr/share/nginx/html # Moved here!
+
+    restart: unless-stopped
